@@ -84,6 +84,9 @@
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_projectile.vpcf"
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_stackui02.vpcf"
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_release.vpcf"
+
+		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
 		//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
 	}
 
@@ -101,6 +104,12 @@
 
 	"OnSpellStart"
 	{
+		"FireSound"
+		{
+			"EffectName"	"Hero_ShadowDemon.ShadowPoison.Cast"
+			"Target" 		"CASTER"
+		}
+
 		"LinearProjectile"
 		{
 		    "Target"      	 "POINT"
@@ -123,6 +132,12 @@
 	{
 		"DeleteOnHit"	"0"
 		
+		"FireSound"
+		{
+			"EffectName"	"Hero_ShadowDemon.ShadowPoison.Impact"
+			"Target" 		"TARGET"
+		}
+
 		"FireEffect"
 		{
 			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_impact.vpcf"
@@ -162,6 +177,19 @@
 
 			"OnDestroy"
 			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.ShadowPoison.Release"
+					"Target" 		"TARGET"
+				}
+
+				"FireEffect"
+				{
+					"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_release.vpcf"
+					"EffectAttachType"  "follow_origin"
+					"Target"            "TARGET"
+				}
+
 				"RunScript"
 				{
 					"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"

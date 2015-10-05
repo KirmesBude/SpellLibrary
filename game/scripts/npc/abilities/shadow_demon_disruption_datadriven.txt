@@ -67,17 +67,6 @@
 	{
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
 		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
-		//Hero_ShadowDemon.Disruption.Cast
-		//Hero_ShadowDemon.Disruption.End
-		//Hero_ShadowDemon.Disruption
-		//Hero_ShadowDemon.Soul_Catcher
-		//Hero_ShadowDemon.ShadowPoison.Cast
-		//Hero_ShadowDemon.ShadowPoison
-		//Hero_ShadowDemon.ShadowPoison.Impact
-		//Hero_ShadowDemon.ShadowPoison.Release
-		//Hero_ShadowDemon.DemonicPurge.Cast
-		//Hero_ShadowDemon.DemonicPurge.Impact
-		//Hero_ShadowDemon.DemonicPurge.Damage
 	}
 
 	// Datadriven

@@ -121,10 +121,12 @@ function Release( keys )
 	local targets = caster.Shadow_Poison_Targets
 	local modifier_name = keys.ModifierName
 
-	for i=1, #targets, 1 do
-		local target = table.remove(targets, 1)
+	if targets ~= nil then
+		for i=1, #targets, 1 do
+			local target = table.remove(targets, 1)
 
-		target:RemoveModifierByName(modifier_name)
+			target:RemoveModifierByName(modifier_name)
+		end
 	end
 end
 

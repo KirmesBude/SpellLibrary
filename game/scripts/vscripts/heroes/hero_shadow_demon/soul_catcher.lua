@@ -12,6 +12,16 @@ function Soul_Catcher_Start ( keys )
 	local typeFilter = ability:GetAbilityTargetType()
 	local flagFilter = DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD
 
+	-- Visuals
+	local dummy = CreateUnitByName("npc_dummy_unit", center, false, caster, caster, caster:GetTeam())
+	EmitSoundOn("Hero_ShadowDemon.Soul_Catcher", dummy)
+
+	particles = ParticleManager:CreateParticle("particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf", PATTACH_ABSORIGIN_FOLLOW, dummy)
+	ParticleManager:SetParticleControlEnt(particles, 0, dummy, PATTACH_ABSORIGIN_FOLLOW, "follow_origin", center, true)
+	ParticleManager:ReleaseParticleIndex(particles)
+
+	dummy:ForceKill(false)
+
 	local disruptedUnits = caster.disruptedUnits
 	--PrintTable(disruptedUnits)
 

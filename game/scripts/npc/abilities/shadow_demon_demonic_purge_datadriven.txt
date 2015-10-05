@@ -65,27 +65,46 @@
 			"var_type"			"FIELD_INTEGER"
 			"charge_restore_time_tooltip_scepter"		"40"
 		}
+		"07"
+		{
+			"var_type"			"FIELD_FLOAT"
+			"movement_slow"		"-100 -100 -100"
+		}
 	}
 
 	// Precache
 	//-------------------------------------------------------------------------------------------------------------
 	"precache"
 	{
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge_cast.vpcf"
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge.vpcf"
 
+		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
 	}
 
 	// Datadriven
 	//-------------------------------------------------------------------------------------------------------------
 	"OnSpellStart"
 	{
-		"ApplyModifier"
+		"FireSound"
 		{
-			"ModifierName"	"modifier_shadow_demon_demonic_purge_datadriven"
+			"EffectName"	"Hero_ShadowDemon.DemonicPurge.Cast"
 			"Target" 		"TARGET"
-			"Duration"		"%AbilityDuration"
 		}
 
-		// Apply slow modifier
+		"FireEffect"
+		{
+			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge_cast.vpcf"
+			"EffectAttachType"  "follow_origin"
+			"Target"            "TARGET"
+		}
+
+		"RunScript"
+		{
+			"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
+			"Function"		"DemonicPurgeStart"
+			"ModifierName"	"modifier_shadow_demon_demonic_purge_datadriven"
+		}
 	}
 
 	"Modifiers"
@@ -98,10 +117,10 @@
 			"IsPurgable"		"0"
 			"IsBuff"			"0"
 			"IsDebuff"			"1"
-			"IsStunDebuff"		"0"
+			"IsStunDebuff"		"1"
 			//Purge(bool RemovePositiveBuffs, bool RemoveDebuffs, bool BuffsCreatedThisFrameOnly, bool RemoveStuns, bool RemoveExceptions)
 		
-			"EffectName"		""
+			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge.vpcf"
 			"EffectAttachType"	"follow_origin"
 			
 			"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
@@ -111,13 +130,36 @@
 			    "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE" "-1" 
 			}
 
+			"OnCreated"
+			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.DemonicPurge.Impact"
+					"Target" 		"TARGET"
+				}
+			}
+
 			"OnDestroy"
 			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.DemonicPurge.Damage"
+					"Target" 		"TARGET"
+				}
+
+				"FireEffect"
+				{
+					"EffectName"        ""
+					"EffectAttachType"  "follow_origin"
+					"Target"            "TARGET"
+				}
+
 				//Purge and damage
 				"RunScript"
 				{
-					"ScriptFile"	"heroes/hero_name/ability_name.lua"
-					"Function"		"AbilityName"
+					"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
+					"Function"		"DemonicPurgeModifierDestroyed"
+					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
 				}
 			}
 		}

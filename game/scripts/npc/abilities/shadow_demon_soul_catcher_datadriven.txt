@@ -54,17 +54,25 @@
 	{
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_debuff.vpcf"
 		"particle"	"particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
+
+		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
 	}
 	
 	// Datadriven
 	//-------------------------------------------------------------------------------------------------------------
 	"OnSpellStart"
 	{
+		"FireSound"
+		{
+			"EffectName"	"Hero_ShadowDemon.Soul_Catcher"
+			"Target" 		"TARGET"
+		}
+
 		"FireEffect"
 		{
 			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
-			"EffectAttachType"  "attach_point"
-			"Target"            "POINT"
+			"EffectAttachType"  "attach_origin"
+			"Target"            "TARGET"
 		}
 
 		"RunScript"
