@@ -1,9 +1,5 @@
-//Generated using Dota Custom File Generator by cris9696
 "DOTAHeroes"
 {
-
-
-	//Start of file test_dummy_melee.txt
 	"npc_dota_hero_antimage_datadriven"
 	{
 		"override_hero" "npc_dota_hero_abaddon"
@@ -13,10 +9,6 @@
 		"Ability3"	"huskar_berserkers_blood_datadriven"
 		"Ability4"	"shadow_demon_demonic_purge_datadriven"
 	}
-	//End of file test_dummy_melee.txt
-
-
-	//Start of file test_dummy_ranged.txt
 	"npc_dota_hero_ancient_apparition_datadriven"
 	{
 		"override_hero" "npc_dota_hero_ancient_apparition"
@@ -29,5 +21,4 @@
 		"Ability4"	"shadow_demon_shadow_poison_release_datadriven"
 		"Ability5"	"shadow_demon_demonic_purge_datadriven"
 	}
-	//End of file test_dummy_ranged.txt
 }
