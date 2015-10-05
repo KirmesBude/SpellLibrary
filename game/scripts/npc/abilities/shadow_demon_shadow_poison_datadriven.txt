@@ -2,10 +2,11 @@
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
-	"BaseClass"				"ability_datadriven"
+	"BaseClass"						"ability_datadriven"
 	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 	"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 	"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+	"AbilityTextureName"			"shadow_demon_shadow_poison"
 
 	// Time		
 	//-------------------------------------------------------------------------------------------------------------
@@ -62,6 +63,112 @@
 		{
 			"var_type"				"FIELD_FLOAT"
 			"tooltip_duration"		"10.0 10.0 10.0 10.0"
+		}
+		"07"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"fixed_distance"		"1500"
+		}
+		"08"
+		{
+			"var_type"				"FIELD_FLOAT"
+			"vision_radius"			"200.0"
+		}
+	}
+
+	// Precache
+	//-------------------------------------------------------------------------------------------------------------
+	"precache"
+	{
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_impact.vpcf"
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_projectile.vpcf"
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_stackui02.vpcf"
+		//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
+	}
+
+	// Datadriven
+	//-------------------------------------------------------------------------------------------------------------
+	"OnUpgrade"
+	{
+		"RunScript"
+		{
+			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+			"Function"		"OnUpgrade"
+			"ReleaseName"	"shadow_demon_shadow_poison_release_datadriven"
+		}
+	}
+
+	"OnSpellStart"
+	{
+		"LinearProjectile"
+		{
+		    "Target"      	 "POINT"
+			"EffectName"	 "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_projectile.vpcf"
+			"MoveSpeed"		 "%speed"
+			"StartRadius"	 "%radius"
+			"StartPosition"  "attach_attack1"
+			"EndRadius"      "%radius"
+			"HasFrontalCone" "0"
+			"FixedDistance"  "%fixed_distance"
+			"TargetTeams"	 "DOTA_UNIT_TARGET_TEAM_ENEMY"
+			"TargetTypes"	 "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+			"TargetFlags"	 "DOTA_UNIT_TARGET_FLAG_INVULNERABLE | DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD"					
+		    "ProvidesVision" "1"
+		    "VisionRadius" 	 "%vision_radius"
+		}
+	}
+
+	"OnProjectileHitUnit"
+	{
+		"DeleteOnHit"	"0"
+		
+		"FireEffect"
+		{
+			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_impact.vpcf"
+			"EffectAttachType"  "follow_origin"
+			"Target"            "TARGET"
+		}
+
+		"RunScript"
+		{
+			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+			"Function"		"OnProjectileHit"
+			"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+			"ModifierNameDisruptionInvulnerable"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+			"AbilityNameDisruption"	"shadow_demon_disruption_datadriven"
+		}
+
+		"Damage"
+		{
+			"Target"		"TARGET"
+			"Type"			"DAMAGE_TYPE_MAGICAL"
+			"Damage"		"%AbilityDamage"
+		}
+	}
+
+	"Modifiers"
+	{
+		"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+		{
+			"Passive"			"0"
+			"IsHidden"			"0"
+			"IsDebuff"			"1"
+	
+			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
+			"EffectAttachType"	"follow_origin"
+
+			"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
+
+			"OnDestroy"
+			{
+				"RunScript"
+				{
+					"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+					"Function"		"OnModifierDestroyed"
+					"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+				}
+			}
 		}
 	}
 }

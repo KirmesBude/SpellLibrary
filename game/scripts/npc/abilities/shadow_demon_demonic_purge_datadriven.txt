@@ -66,5 +66,61 @@
 			"charge_restore_time_tooltip_scepter"		"40"
 		}
 	}
+
+	// Precache
+	//-------------------------------------------------------------------------------------------------------------
+	"precache"
+	{
+
+	}
+
+	// Datadriven
+	//-------------------------------------------------------------------------------------------------------------
+	"OnSpellStart"
+	{
+		"ApplyModifier"
+		{
+			"ModifierName"	"modifier_shadow_demon_demonic_purge_datadriven"
+			"Target" 		"TARGET"
+			"Duration"		"%AbilityDuration"
+		}
+
+		// Apply slow modifier
+	}
+
+	"Modifiers"
+	{
+		"modifier_shadow_demon_demonic_purge_datadriven"
+		{
+			"Passive"			"0"
+			"IsHidden"			"0"
+
+			"IsPurgable"		"0"
+			"IsBuff"			"0"
+			"IsDebuff"			"1"
+			"IsStunDebuff"		"0"
+			//Purge(bool RemovePositiveBuffs, bool RemoveDebuffs, bool BuffsCreatedThisFrameOnly, bool RemoveStuns, bool RemoveExceptions)
+		
+			"EffectName"		""
+			"EffectAttachType"	"follow_origin"
+			
+			"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
+
+			"Properties"
+			{
+			    "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE" "-1" 
+			}
+
+			"OnDestroy"
+			{
+				//Purge and damage
+				"RunScript"
+				{
+					"ScriptFile"	"heroes/hero_name/ability_name.lua"
+					"Function"		"AbilityName"
+				}
+			}
+		}
+	}
 }
 

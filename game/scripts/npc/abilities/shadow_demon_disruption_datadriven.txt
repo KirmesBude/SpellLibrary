@@ -2,7 +2,7 @@
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
-	"BaseClass"				"ability_datadriven"
+	"BaseClass"						"ability_datadriven"
 	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
 	"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY | DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 	"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO"
@@ -60,5 +60,151 @@
 			"tooltip_total_illusion_incoming_damage"	"150.0 150.0 150.0 150.0"
 		}			
 	}
+
+	// Precache
+	//-------------------------------------------------------------------------------------------------------------
+	"precache"
+	{
+		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
+		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
+		//Hero_ShadowDemon.Disruption.Cast
+		//Hero_ShadowDemon.Disruption.End
+		//Hero_ShadowDemon.Disruption
+		//Hero_ShadowDemon.Soul_Catcher
+		//Hero_ShadowDemon.ShadowPoison.Cast
+		//Hero_ShadowDemon.ShadowPoison
+		//Hero_ShadowDemon.ShadowPoison.Impact
+		//Hero_ShadowDemon.ShadowPoison.Release
+		//Hero_ShadowDemon.DemonicPurge.Cast
+		//Hero_ShadowDemon.DemonicPurge.Impact
+		//Hero_ShadowDemon.DemonicPurge.Damage
+	}
+
+	// Datadriven
+	//-------------------------------------------------------------------------------------------------------------
+	"OnSpellStart"
+	{
+		"FireSound"
+		{
+			"EffectName"	"Hero_ShadowDemon.Disruption.Cast"
+			"Target" 		"TARGET"
+		}
+
+		"ApplyModifier"
+		{
+			"ModifierName"	"modifier_shadow_demon_disruption_datadriven"
+			"Target" 		"TARGET"
+			"Duration"		"%AbilityDuration"
+		}
+
+		"RunScript"
+		{
+			"ScriptFile"			"heroes/hero_shadow_demon/disruption.lua"
+			"Function"				"ApplyBuffOrDebuff"
+			"ModifierName_Buff"		"modifier_shadow_demon_disruption_datadriven_buff"
+			"ModifierName_Debuff"	"modifier_shadow_demon_disruption_datadriven_debuff"
+		}
+	}
+
+	"Modifiers"
+	{
+		"modifier_shadow_demon_disruption_datadriven"
+		{
+			"Duration"			"%AbilityDuration"
+			"Passive"			"0"
+			"IsHidden"			"1"
+			"IsDebuff"			"0"
+	
+			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
+			"EffectAttachType"	"attach_origin"
+
+			"ControlPointEntities"
+			{
+				"TARGET"	"attach_origin"
+			}
+	
+			"States"
+			{
+				"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+				"MODIFIER_STATE_OUT_OF_GAME"	"MODIFIER_STATE_VALUE_ENABLED"
+				"MODIFIER_STATE_NO_HEALTH_BAR"	"MODIFIER_STATE_VALUE_ENABLED"
+			}
+
+			"OnCreated"
+			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.Disruption"
+					"Target" 		"TARGET"
+				}
+
+				"RunScript"
+				{
+					"ScriptFile"	"heroes/hero_shadow_demon/disruption.lua"
+					"Function"		"DisruptionStart"
+				}
+
+				"ApplyModifier"
+				{
+					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+					"Target" 		"TARGET"
+					"Duration"		"%AbilityDuration"
+				}
+			}
+
+			"OnDestroy"
+			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.Disruption.End"
+					"Target"		"TARGET"
+				}
+
+				"RunScript"
+				{
+					"ScriptFile"	"heroes/hero_shadow_demon/disruption.lua"
+					"Function"		"DisruptionEnd"
+					"sound_name"	"Hero_ShadowDemon.Disruption"
+				}
+
+				"RemoveModifier"
+				{
+					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+					"Target" 		"TARGET"
+				}
+			}	
+		}
+
+		"modifier_shadow_demon_disruption_datadriven_invulnerable"
+		{
+			"Passive"			"0"
+			"IsHidden"			"1"
+			"IsDebuff"			"0"
+		
+			"States"
+			{
+				"MODIFIER_STATE_INVULNERABLE"		"MODIFIER_STATE_VALUE_ENABLED"
+			}
+		}
+
+		"modifier_shadow_demon_disruption_datadriven_buff"
+		{
+			"Duration"			"%AbilityDuration"
+
+			"Passive"			"0"
+			"IsHidden"			"0"
+			"IsDebuff"			"0"
+		}
+
+		"modifier_shadow_demon_disruption_datadriven_debuff"
+		{
+			"Duration"			"%AbilityDuration"
+
+			"Passive"			"0"
+			"IsHidden"			"0"
+			"IsDebuff"			"1"
+		}
+	}
+
 }
 

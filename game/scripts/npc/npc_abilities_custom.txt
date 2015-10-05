@@ -23922,7 +23922,6 @@
 	// Date: 30.09.2015
 	// NOTE: Particles and Effects do not work at all
 	//		 Model size increase is probably inaccurate and also not very smooth
-	//		 Health percentages (and max stacks) is static for now
 	"huskar_berserkers_blood_datadriven"
 	{
 		// General
@@ -50025,7 +50024,7 @@
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
-		"BaseClass"				"ability_datadriven"
+		"BaseClass"						"ability_datadriven"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY | DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO"
@@ -50083,6 +50082,152 @@
 				"tooltip_total_illusion_incoming_damage"	"150.0 150.0 150.0 150.0"
 			}			
 		}
+	
+		// Precache
+		//-------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
+			"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
+			//Hero_ShadowDemon.Disruption.Cast
+			//Hero_ShadowDemon.Disruption.End
+			//Hero_ShadowDemon.Disruption
+			//Hero_ShadowDemon.Soul_Catcher
+			//Hero_ShadowDemon.ShadowPoison.Cast
+			//Hero_ShadowDemon.ShadowPoison
+			//Hero_ShadowDemon.ShadowPoison.Impact
+			//Hero_ShadowDemon.ShadowPoison.Release
+			//Hero_ShadowDemon.DemonicPurge.Cast
+			//Hero_ShadowDemon.DemonicPurge.Impact
+			//Hero_ShadowDemon.DemonicPurge.Damage
+		}
+	
+		// Datadriven
+		//-------------------------------------------------------------------------------------------------------------
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"	"Hero_ShadowDemon.Disruption.Cast"
+				"Target" 		"TARGET"
+			}
+	
+			"ApplyModifier"
+			{
+				"ModifierName"	"modifier_shadow_demon_disruption_datadriven"
+				"Target" 		"TARGET"
+				"Duration"		"%AbilityDuration"
+			}
+	
+			"RunScript"
+			{
+				"ScriptFile"			"heroes/hero_shadow_demon/disruption.lua"
+				"Function"				"ApplyBuffOrDebuff"
+				"ModifierName_Buff"		"modifier_shadow_demon_disruption_datadriven_buff"
+				"ModifierName_Debuff"	"modifier_shadow_demon_disruption_datadriven_debuff"
+			}
+		}
+	
+		"Modifiers"
+		{
+			"modifier_shadow_demon_disruption_datadriven"
+			{
+				"Duration"			"%AbilityDuration"
+				"Passive"			"0"
+				"IsHidden"			"1"
+				"IsDebuff"			"0"
+		
+				"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
+				"EffectAttachType"	"attach_origin"
+	
+				"ControlPointEntities"
+				{
+					"TARGET"	"attach_origin"
+				}
+		
+				"States"
+				{
+					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_OUT_OF_GAME"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_HEALTH_BAR"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+	
+				"OnCreated"
+				{
+					"FireSound"
+					{
+						"EffectName"	"Hero_ShadowDemon.Disruption"
+						"Target" 		"TARGET"
+					}
+	
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_shadow_demon/disruption.lua"
+						"Function"		"DisruptionStart"
+					}
+	
+					"ApplyModifier"
+					{
+						"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+						"Target" 		"TARGET"
+						"Duration"		"%AbilityDuration"
+					}
+				}
+	
+				"OnDestroy"
+				{
+					"FireSound"
+					{
+						"EffectName"	"Hero_ShadowDemon.Disruption.End"
+						"Target"		"TARGET"
+					}
+	
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_shadow_demon/disruption.lua"
+						"Function"		"DisruptionEnd"
+						"sound_name"	"Hero_ShadowDemon.Disruption"
+					}
+	
+					"RemoveModifier"
+					{
+						"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+						"Target" 		"TARGET"
+					}
+				}	
+			}
+	
+			"modifier_shadow_demon_disruption_datadriven_invulnerable"
+			{
+				"Passive"			"0"
+				"IsHidden"			"1"
+				"IsDebuff"			"0"
+			
+				"States"
+				{
+					"MODIFIER_STATE_INVULNERABLE"		"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+	
+			"modifier_shadow_demon_disruption_datadriven_buff"
+			{
+				"Duration"			"%AbilityDuration"
+	
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"IsDebuff"			"0"
+			}
+	
+			"modifier_shadow_demon_disruption_datadriven_debuff"
+			{
+				"Duration"			"%AbilityDuration"
+	
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"IsDebuff"			"1"
+			}
+		}
+	
 	}
 	
 	//End of file shadow_demon_disruption_datadriven.txt
@@ -50093,10 +50238,11 @@
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
-		"BaseClass"				"ability_datadriven"
+		"BaseClass"						"ability_datadriven"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"AbilityTextureName"			"shadow_demon_shadow_poison"
 	
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
@@ -50154,6 +50300,112 @@
 				"var_type"				"FIELD_FLOAT"
 				"tooltip_duration"		"10.0 10.0 10.0 10.0"
 			}
+			"07"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"fixed_distance"		"1500"
+			}
+			"08"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"vision_radius"			"200.0"
+			}
+		}
+	
+		// Precache
+		//-------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_impact.vpcf"
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_projectile.vpcf"
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_stackui02.vpcf"
+			//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
+		}
+	
+		// Datadriven
+		//-------------------------------------------------------------------------------------------------------------
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+				"Function"		"OnUpgrade"
+				"ReleaseName"	"shadow_demon_shadow_poison_release_datadriven"
+			}
+		}
+	
+		"OnSpellStart"
+		{
+			"LinearProjectile"
+			{
+			    "Target"      	 "POINT"
+				"EffectName"	 "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_projectile.vpcf"
+				"MoveSpeed"		 "%speed"
+				"StartRadius"	 "%radius"
+				"StartPosition"  "attach_attack1"
+				"EndRadius"      "%radius"
+				"HasFrontalCone" "0"
+				"FixedDistance"  "%fixed_distance"
+				"TargetTeams"	 "DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"TargetTypes"	 "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+				"TargetFlags"	 "DOTA_UNIT_TARGET_FLAG_INVULNERABLE | DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD"					
+			    "ProvidesVision" "1"
+			    "VisionRadius" 	 "%vision_radius"
+			}
+		}
+	
+		"OnProjectileHitUnit"
+		{
+			"DeleteOnHit"	"0"
+			
+			"FireEffect"
+			{
+				"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_impact.vpcf"
+				"EffectAttachType"  "follow_origin"
+				"Target"            "TARGET"
+			}
+	
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+				"Function"		"OnProjectileHit"
+				"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+				"ModifierNameDisruptionInvulnerable"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+				"AbilityNameDisruption"	"shadow_demon_disruption_datadriven"
+			}
+	
+			"Damage"
+			{
+				"Target"		"TARGET"
+				"Type"			"DAMAGE_TYPE_MAGICAL"
+				"Damage"		"%AbilityDamage"
+			}
+		}
+	
+		"Modifiers"
+		{
+			"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+			{
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"IsDebuff"			"1"
+		
+				"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
+				"EffectAttachType"	"follow_origin"
+	
+				"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
+	
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+						"Function"		"OnModifierDestroyed"
+						"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+					}
+				}
+			}
 		}
 	}
 	
@@ -50165,9 +50417,10 @@
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
-		"BaseClass"				"ability_datadriven"
+		"BaseClass"						"ability_datadriven"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"MaxLevel"						"1"
+		"AbilityTextureName"			"shadow_demon_shadow_poison_release"
 	
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -50176,6 +50429,26 @@
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityCooldown"				"1.0"
+	
+		// Precache
+		//-------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			//"particle"  "particle_name"
+			//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
+		}
+	
+		// Datadriven
+		//-------------------------------------------------------------------------------------------------------------
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+				"Function"		"Release"
+				"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+			}
+		}
 	}
 	
 	//End of file shadow_demon_shadow_poison_release_datadriven.txt
@@ -50186,12 +50459,16 @@
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
-		"BaseClass"				"ability_datadriven"
+		"BaseClass"						"ability_datadriven"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_PURE"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_INVULNERABLE | DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD"
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"shadow_demon_soul_catcher"
+		"AoERadius"						"%radius"
 	
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
@@ -50225,6 +50502,56 @@
 			{
 				"var_type"				"FIELD_FLOAT"
 				"tooltip_duration"		"12.0 12.0 12.0 12.0"
+			}
+		}
+		
+		// Precache
+		//-------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_debuff.vpcf"
+			"particle"	"particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
+		}
+		
+		// Datadriven
+		//-------------------------------------------------------------------------------------------------------------
+		"OnSpellStart"
+		{
+			"FireEffect"
+			{
+				"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
+				"EffectAttachType"  "attach_point"
+				"Target"            "POINT"
+			}
+	
+			"RunScript"
+			{
+				"ScriptFile"							"heroes/hero_shadow_demon/soul_catcher.lua"
+				"Function"								"Soul_Catcher_Start"
+				"ModifierName"							"modifier_shadow_demon_soul_catcher_datadriven"
+				"ModifierNameDisruptionInvulnerable"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+				"AbilityNameDisruption"					"shadow_demon_disruption_datadriven"
+			}
+		}
+	
+		"Modifiers"
+		{
+			"modifier_shadow_demon_soul_catcher_datadriven"
+			{
+				"Duration"			"%AbilityDuration"
+				"Passive"			"0"
+				"IsHidden"			"0"
+				"IsDebuff"			"1"
+		
+				"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_debuff.vpcf"
+				"EffectAttachType"	"follow_origin"
+			
+				"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
+				
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_INCOMING_DAMAGE_PERCENTAGE"	"%bonus_damage_taken"
+				}
 			}
 		}
 	}

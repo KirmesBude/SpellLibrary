@@ -2,9 +2,10 @@
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
-	"BaseClass"				"ability_datadriven"
+	"BaseClass"						"ability_datadriven"
 	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 	"MaxLevel"						"1"
+	"AbilityTextureName"			"shadow_demon_shadow_poison_release"
 
 	// Casting
 	//-------------------------------------------------------------------------------------------------------------
@@ -13,5 +14,25 @@
 	// Time		
 	//-------------------------------------------------------------------------------------------------------------
 	"AbilityCooldown"				"1.0"
+
+	// Precache
+	//-------------------------------------------------------------------------------------------------------------
+	"precache"
+	{
+		//"particle"  "particle_name"
+		//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
+	}
+
+	// Datadriven
+	//-------------------------------------------------------------------------------------------------------------
+	"OnSpellStart"
+	{
+		"RunScript"
+		{
+			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
+			"Function"		"Release"
+			"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+		}
+	}
 }
 
