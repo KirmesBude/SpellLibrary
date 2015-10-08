@@ -1,8 +1,18 @@
-"shadow_demon_demonic_purge_datadriven"
+// Rewrite of Shadow Demon Demonic Purge
+// Author: Bude
+// Date: 8.10.2015
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_shadow_demon/demonic_purge.lua
+// TODO: split into root slow and debuff
+"demonic_purge_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
-	"BaseClass"				"ability_datadriven"
+	"BaseClass"						"ability_datadriven"
 	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
 	"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 	"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
@@ -92,6 +102,7 @@
 			"Target" 		"TARGET"
 		}
 
+		// TODO: Target = CASTER and attached to its attack
 		"FireEffect"
 		{
 			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge_cast.vpcf"
@@ -103,13 +114,13 @@
 		{
 			"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
 			"Function"		"DemonicPurgeStart"
-			"ModifierName"	"modifier_shadow_demon_demonic_purge_datadriven"
+			"ModifierName"	"modifier_demonic_purge"
 		}
 	}
 
 	"Modifiers"
 	{
-		"modifier_shadow_demon_demonic_purge_datadriven"
+		"modifier_demonic_purge"
 		{
 			"Passive"			"0"
 			"IsHidden"			"0"
@@ -123,7 +134,7 @@
 			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge.vpcf"
 			"EffectAttachType"	"follow_origin"
 			
-			"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
+			"Attributes"		"MODIFIER_ATTRIBUTE_MULTIPLE"
 
 			"Properties"
 			{
@@ -146,20 +157,13 @@
 					"EffectName"	"Hero_ShadowDemon.DemonicPurge.Damage"
 					"Target" 		"TARGET"
 				}
-
-				"FireEffect"
-				{
-					"EffectName"        ""
-					"EffectAttachType"  "follow_origin"
-					"Target"            "TARGET"
-				}
-
+				
 				//Purge and damage
 				"RunScript"
 				{
 					"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
 					"Function"		"DemonicPurgeModifierDestroyed"
-					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+					"ModifierName"	"modifier_disruption_invulnerable"
 				}
 			}
 		}

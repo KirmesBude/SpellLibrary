@@ -1,4 +1,13 @@
-"shadow_demon_shadow_poison_datadriven"
+// Rewrite of Shadow Demon Shadow Poison
+// Author: Bude
+// Date: 08.10.2015
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_shadow_demon/shadow_poison.lua
+"shadow_poison_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
@@ -87,7 +96,6 @@
 		"particle"  "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_release.vpcf"
 
 		"soundfile" "soundevents/game_sounds_heroes/game_sounds_shadow_demon.vsndevts"
-		//"soundfile" "soundevents/game_sounds_heroes/game_sounds_HERO.vsndevts"
 	}
 
 	// Datadriven
@@ -98,7 +106,7 @@
 		{
 			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
 			"Function"		"OnUpgrade"
-			"ReleaseName"	"shadow_demon_shadow_poison_release_datadriven"
+			"ReleaseName"	"shadow_poison_release_datadriven"
 		}
 	}
 
@@ -107,6 +115,12 @@
 		"FireSound"
 		{
 			"EffectName"	"Hero_ShadowDemon.ShadowPoison.Cast"
+			"Target" 		"CASTER"
+		}
+
+		"FireSound"
+		{
+			"EffectName"	"Hero_ShadowDemon.ShadowPoison"
 			"Target" 		"CASTER"
 		}
 
@@ -149,9 +163,9 @@
 		{
 			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
 			"Function"		"OnProjectileHit"
-			"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
-			"ModifierNameDisruptionInvulnerable"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
-			"AbilityNameDisruption"	"shadow_demon_disruption_datadriven"
+			"ModifierName"	"modifier_shadow_poison_debuff"
+			"ModifierNameDisruptionInvulnerable"	"modifier_disruption_invulnerable"
+			"AbilityNameDisruption"	"disruption_datadriven"
 		}
 
 		"Damage"
@@ -164,7 +178,7 @@
 
 	"Modifiers"
 	{
-		"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+		"modifier_shadow_poison_debuff"
 		{
 			"Passive"			"0"
 			"IsHidden"			"0"
@@ -194,7 +208,7 @@
 				{
 					"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
 					"Function"		"OnModifierDestroyed"
-					"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+					"ModifierName"	"modifier_shadow_poison_debuff"
 				}
 			}
 		}

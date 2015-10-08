@@ -1,4 +1,13 @@
-"shadow_demon_shadow_poison_release_datadriven"
+// Rewrite of Shadow Demon Shadow Poison Release
+// Author: Bude
+// Date: 08.10.2015
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_shadow_demon/shadow_poison.lua
+"shadow_poison_release_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
@@ -31,7 +40,7 @@
 		{
 			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
 			"Function"		"Release"
-			"ModifierName"	"modifier_shadow_demon_shadow_poison_datadriven_debuff"
+			"ModifierName"	"modifier_shadow_poison_debuff"
 		}
 	}
 }

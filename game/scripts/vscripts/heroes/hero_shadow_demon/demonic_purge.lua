@@ -34,8 +34,8 @@ function Slow( keys )
 	local slow_rate_value = movement_slow / slow_intervals
 
 	-- Remove the old timer if we are refreshing the duration
-	if target.venomous_gale_timer then
-		Timers:RemoveTimer(target.venomous_gale_timer)
+	if target.Demonic_Purge_Timer then
+		Timers:RemoveTimer(target.Demonic_Purge_Timer)
 	end
 
 	-- Apply the Venomous Gale modifier and set the slow amount
@@ -44,7 +44,7 @@ function Slow( keys )
 
 	-- Create the timer thats responsible for the decaying movement slow
 	-- Save it to the target so that we can remove it later
-	target.venomous_gale_timer = Timers:CreateTimer(slow_rate, function()
+	target.Demonic_Purge_Timer = Timers:CreateTimer(slow_rate, function()
 		if IsValidEntity(target) and target:HasModifier(modifier_name) then
 			local current_slow = target:GetModifierStackCount(modifier_name, caster)
 			target:SetModifierStackCount(modifier_name, caster, current_slow - slow_rate_value)
@@ -112,9 +112,9 @@ end
 
 
 function IsDisruptedFromCaster( caster, target )
-	local disruptedUnits = caster.disruptedUnits
+	local disruptedTargets = caster.Disruption_Targets
 
-	return TableContains(disruptedUnits, target)
+	return TableContains(disruptedTargets, target)
 end
 
 function TableContains( table, handle )

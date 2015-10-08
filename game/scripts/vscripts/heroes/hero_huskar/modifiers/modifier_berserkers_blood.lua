@@ -1,5 +1,5 @@
-if modifier_huskar_berserkers_blood_lua == nil then
-    modifier_huskar_berserkers_blood_lua = class({})
+if modifier_berserkers_blood == nil then
+    modifier_berserkers_blood = class({})
 end
 
 --[[Author: Bude
@@ -9,22 +9,22 @@ end
 	NOTE: Model size increase is probably inaccurate and also awfully jumpy
 ]]--
 
-function modifier_huskar_berserkers_blood_lua:GetAttributes()
+function modifier_berserkers_blood:GetAttributes()
 	return MODIFIER_ATTRIBUTE_PERMANENT
 end
 
 --As described: Could not get the particles to work ...
 --[[
-function modifier_huskar_berserkers_blood_lua:GetStatusEffectName()
+function modifier_berserkers_blood:GetStatusEffectName()
 	return "particles/units/heroes/hero_huskar/huskar_berserker_blood_hero_effect.vpcf"
 end
 
-function modifier_huskar_berserkers_blood_lua:GetStatusEffectPriority()
+function modifier_berserkers_blood:GetStatusEffectPriority()
 	return 16
 end
 ]]--
 
-function modifier_huskar_berserkers_blood_lua:OnCreated()
+function modifier_berserkers_blood:OnCreated()
 	-- Variables
 	self.berserkers_blood_magic_resist = self:GetAbility():GetSpecialValueFor( "resistance_per_stack" )
 	self.berserkers_blood_attack_speed = self:GetAbility():GetSpecialValueFor( "attack_speed_bonus_per_stack" )
@@ -43,7 +43,7 @@ function modifier_huskar_berserkers_blood_lua:OnCreated()
     end
 end
 
-function modifier_huskar_berserkers_blood_lua:OnIntervalThink()
+function modifier_berserkers_blood:OnIntervalThink()
 	if IsServer() then
 		--print("Thinking")
 
@@ -81,7 +81,7 @@ function modifier_huskar_berserkers_blood_lua:OnIntervalThink()
 	end
 end
 
-function modifier_huskar_berserkers_blood_lua:OnRefresh()
+function modifier_berserkers_blood:OnRefresh()
 	self.berserkers_blood_magic_resist = self:GetAbility():GetSpecialValueFor( "resistance_per_stack" )
 	self.berserkers_blood_attack_speed = self:GetAbility():GetSpecialValueFor( "attack_speed_bonus_per_stack" )
 	local StackCount = self:GetStackCount()
@@ -92,7 +92,7 @@ function modifier_huskar_berserkers_blood_lua:OnRefresh()
     end
 end
 
-function modifier_huskar_berserkers_blood_lua:DeclareFunctions()
+function modifier_berserkers_blood:DeclareFunctions()
 	local funcs = {
 		MODIFIER_PROPERTY_MAGICAL_RESISTANCE_BONUS,
 		MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT 
@@ -101,10 +101,10 @@ function modifier_huskar_berserkers_blood_lua:DeclareFunctions()
 	return funcs
 end
 
-function modifier_huskar_berserkers_blood_lua:GetModifierMagicalResistanceBonus( params )
+function modifier_berserkers_blood:GetModifierMagicalResistanceBonus( params )
 	return self:GetStackCount() * self.berserkers_blood_magic_resist
 end
 
-function modifier_huskar_berserkers_blood_lua:GetModifierAttackSpeedBonus_Constant ( params )
+function modifier_berserkers_blood:GetModifierAttackSpeedBonus_Constant ( params )
 	return self:GetStackCount() * self.berserkers_blood_attack_speed
 end

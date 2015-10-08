@@ -20,7 +20,7 @@ function OnProjectileHit( keys )
 	local modifier_name_disruption_invulnerable = keys.ModifierNameDisruptionInvulnerable
 	local ability_name_disruption = keys.AbilityNameDisruption
 
-	local disruptedUnits = caster.disruptedUnits
+	local disruptedTargets = caster.Disruption_Targets
 
 	if caster.Shadow_Poison_Targets ==  nil then
 		caster.Shadow_Poison_Targets = {}
@@ -28,7 +28,7 @@ function OnProjectileHit( keys )
 
 	local targets = caster.Shadow_Poison_Targets
 
-	if IsValidTarget(targets, disruptedUnits, target) then
+	if IsValidTarget(targets, disruptedTargets, target) then
 		
 		if not TableContains(targets, target) then
 			table.insert(targets, target)
@@ -58,17 +58,17 @@ function OnProjectileHit( keys )
 
 		target.Shadow_Poison_AbilityLevel = ability:GetLevel()
 
-		if target.Shadow_Poison_Counter_Particle == nil then
-			target.Shadow_Poison_Counter_Particle = ParticleManager:CreateParticleForTeam("particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_stackui02.vpcf", PATTACH_OVERHEAD_FOLLOW, target, caster:GetTeamNumber())
+		if target.Shadow_Poison_nFXindex_Counter == nil then
+			target.Shadow_Poison_nFXindex_Counter = ParticleManager:CreateParticleForTeam("particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_stackui02.vpcf", PATTACH_OVERHEAD_FOLLOW, target, caster:GetTeamNumber())
 		end
 
-		ParticleManager:SetParticleControl(target.Shadow_Poison_Counter_Particle, 1, Vector(0,modifier:GetStackCount(),0))
+		ParticleManager:SetParticleControl(target.Shadow_Poison_nFXindex_Counter, 1, Vector(0,modifier:GetStackCount(),0))
 	end
 end
 
-function IsValidTarget(targets, disruptedUnits, target)
+function IsValidTarget(targets, disruptedTargets, target)
 	if target:IsInvulnerable() or target:IsOutOfGame() then
-		if TableContains(disruptedUnits, target) then
+		if TableContains(disruptedTargets, target) then
 			return true
 		end
 	else
@@ -96,9 +96,9 @@ function OnModifierDestroyed( keys )
 	local target = keys.target
 	local ability = keys.ability
 
-	ParticleManager:DestroyParticle(target.Shadow_Poison_Counter_Particle, true)
-	ParticleManager:ReleaseParticleIndex(target.Shadow_Poison_Counter_Particle)
-	target.Shadow_Poison_Counter_Particle = nil
+	ParticleManager:DestroyParticle(target.Shadow_Poison_nFXindex_Counter, true)
+	ParticleManager:ReleaseParticleIndex(target.Shadow_Poison_nFXindex_Counter)
+	target.Shadow_Poison_nFXindex_Counter = nil
 
 	local targets = caster.Shadow_Poison_Targets
 

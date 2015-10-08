@@ -8,26 +8,21 @@ function Soul_Catcher_Start ( keys )
 
 	local center = ability:GetCursorPosition()
 	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel()-1)
+
+	-- Filters since ability:GetAbilityTarget... does not really work >:(
 	local teamFilter = ability:GetAbilityTargetTeam()
 	local typeFilter = ability:GetAbilityTargetType()
 	local flagFilter = DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD
 
-	-- Visuals
-	local dummy = CreateUnitByName("npc_dummy_unit", center, false, caster, caster, caster:GetTeam())
-	EmitSoundOn("Hero_ShadowDemon.Soul_Catcher", dummy)
+	-- Sound
+	EmitSoundOnLocationWithCaster(center, "Hero_ShadowDemon.Soul_Catcher.Cast", caster)
 
-	particles = ParticleManager:CreateParticle("particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf", PATTACH_ABSORIGIN_FOLLOW, dummy)
-	ParticleManager:SetParticleControlEnt(particles, 0, dummy, PATTACH_ABSORIGIN_FOLLOW, "follow_origin", center, true)
-	ParticleManager:ReleaseParticleIndex(particles)
-
-	dummy:ForceKill(false)
-
-	local disruptedUnits = caster.disruptedUnits
-	--PrintTable(disruptedUnits)
+	local disruptedTargets = caster.Disruption_Targets
+	--PrintTable(disruptedTargets)
 
 	local targets = FindUnitsInRadius(caster:GetTeamNumber(), center, nil, radius, teamFilter, typeFilter, flagFilter, 0, true)
 
-	PreProcessTable(targets, disruptedUnits)
+	PreProcessTable(targets, disruptedTargets)
 
 	local target = targets[math.random(#targets)]
 	print(target)
@@ -46,12 +41,12 @@ function Soul_Catcher_Start ( keys )
 	end
 end
 
-function PreProcessTable( targets, disruptedUnits)
+function PreProcessTable( targets, disruptedTargets)
 	for i=1, #targets, 1 do
 		local unit = targets[i]
 
 		if unit:IsInvulnerable() or unit:IsOutOfGame() then
-			if not TableContains(disruptedUnits, unit) then
+			if not TableContains(disruptedTargets, unit) then
 				table.remove(targets, i)
 				i=i-1
 			end

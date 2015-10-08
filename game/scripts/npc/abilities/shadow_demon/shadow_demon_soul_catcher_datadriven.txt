@@ -1,4 +1,13 @@
-"shadow_demon_soul_catcher_datadriven"
+// Rewrite of Shadow Demon Soul Catcher
+// Author: Bude
+// Date: 08.10.2015
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_shadow_demon/soul_catcher.lua
+"soul_catcher_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
@@ -62,32 +71,19 @@
 	//-------------------------------------------------------------------------------------------------------------
 	"OnSpellStart"
 	{
-		"FireSound"
-		{
-			"EffectName"	"Hero_ShadowDemon.Soul_Catcher"
-			"Target" 		"TARGET"
-		}
-
-		"FireEffect"
-		{
-			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
-			"EffectAttachType"  "attach_origin"
-			"Target"            "TARGET"
-		}
-
 		"RunScript"
 		{
 			"ScriptFile"							"heroes/hero_shadow_demon/soul_catcher.lua"
 			"Function"								"Soul_Catcher_Start"
-			"ModifierName"							"modifier_shadow_demon_soul_catcher_datadriven"
-			"ModifierNameDisruptionInvulnerable"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
-			"AbilityNameDisruption"					"shadow_demon_disruption_datadriven"
+			"ModifierName"							"modifier_soul_catcher"
+			"ModifierNameDisruptionInvulnerable"	"modifier_disruption_invulnerable"
+			"AbilityNameDisruption"					"disruption_datadriven"
 		}
 	}
 
 	"Modifiers"
 	{
-		"modifier_shadow_demon_soul_catcher_datadriven"
+		"modifier_soul_catcher"
 		{
 			"Duration"			"%AbilityDuration"
 			"Passive"			"0"
@@ -102,6 +98,22 @@
 			"Properties"
 			{
 				"MODIFIER_PROPERTY_INCOMING_DAMAGE_PERCENTAGE"	"%bonus_damage_taken"
+			}
+
+			"OnCreated"
+			{
+				"FireSound"
+				{
+					"EffectName"	"Hero_ShadowDemon.Soul_Catcher"
+					"Target" 		"TARGET"
+				}
+
+				"FireEffect"
+				{
+					"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_new.vpcf"
+					"EffectAttachType"  "follow_origin"
+					"Target"            "TARGET"
+				}
 			}
 		}
 	}

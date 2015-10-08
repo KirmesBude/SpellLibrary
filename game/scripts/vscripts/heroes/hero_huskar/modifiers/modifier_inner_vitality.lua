@@ -1,5 +1,5 @@
-if modifier_huskar_inner_vitality_lua == nil then
-    modifier_huskar_inner_vitality_lua = class({})
+if modifier_inner_vitality == nil then
+    modifier_inner_vitality = class({})
 end
 
 --[[
@@ -8,11 +8,11 @@ end
     Checks target health every interval and adjusts health regen accordingly
 ]]--
 
-function modifier_huskar_inner_vitality_lua:IsBuff()
+function modifier_inner_vitality:IsBuff()
     return 1
 end
 
-function modifier_huskar_inner_vitality_lua:OnCreated()
+function modifier_inner_vitality:OnCreated()
     self.inner_vitality_heal = self:GetAbility():GetSpecialValueFor( "heal" )
     self.inner_vitality_attrib_bonus = self:GetAbility():GetSpecialValueFor( "attrib_bonus" )
     self.inner_vitality_hurt_attrib_bonus = self:GetAbility():GetSpecialValueFor( "hurt_attrib_bonus" )
@@ -30,7 +30,7 @@ function modifier_huskar_inner_vitality_lua:OnCreated()
     end
 end
 
-function modifier_huskar_inner_vitality_lua:OnIntervalThink()
+function modifier_inner_vitality:OnIntervalThink()
     if IsServer() then
         -- Variables
         local target = self:GetParent()
@@ -75,7 +75,7 @@ function modifier_huskar_inner_vitality_lua:OnIntervalThink()
     end
 end
 
-function modifier_huskar_inner_vitality_lua:OnRefresh()
+function modifier_inner_vitality:OnRefresh()
     self.inner_vitality_heal = self:GetAbility():GetSpecialValueFor( "heal" )
     self.inner_vitality_attrib_bonus = self:GetAbility():GetSpecialValueFor( "attrib_bonus" )
     self.inner_vitality_hurt_attrib_bonus = self:GetAbility():GetSpecialValueFor( "hurt_attrib_bonus" )
@@ -87,7 +87,7 @@ function modifier_huskar_inner_vitality_lua:OnRefresh()
     end
 end
 
-function modifier_huskar_inner_vitality_lua:DeclareFunctions()
+function modifier_inner_vitality:DeclareFunctions()
     local funcs = {
         MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT
     }
@@ -95,6 +95,6 @@ function modifier_huskar_inner_vitality_lua:DeclareFunctions()
     return funcs
 end
 
-function modifier_huskar_inner_vitality_lua:GetModifierConstantHealthRegen( params)
+function modifier_inner_vitality:GetModifierConstantHealthRegen( params)
     return self.heal_amount
 end

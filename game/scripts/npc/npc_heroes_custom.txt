@@ -15,10 +15,10 @@
 	
 		"AbilityLayout"	"5"
 	
-		"Ability1"	"shadow_demon_disruption_datadriven"
-		"Ability2"	"shadow_demon_soul_catcher_datadriven"
-		"Ability3"	"shadow_demon_shadow_poison_datadriven"
-		"Ability4"	"shadow_demon_shadow_poison_release_datadriven"
-		"Ability5"	"shadow_demon_demonic_purge_datadriven"
+		"Ability1"	"disruption_datadriven"
+		"Ability2"	"soul_catcher_datadriven"
+		"Ability3"	"shadow_poison_datadriven"
+		"Ability4"	"shadow_poison_release_datadriven"
+		"Ability5"	"demonic_purge_datadriven"
 	}
 }

@@ -1,4 +1,13 @@
-"shadow_demon_disruption_datadriven"
+// Rewrite of Shadow Demon Disruption
+// Author: Bude
+// Date: 08.10.2015
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_shadow_demon/disruption.lua
+"disruption_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
@@ -81,7 +90,7 @@
 
 		"ApplyModifier"
 		{
-			"ModifierName"	"modifier_shadow_demon_disruption_datadriven"
+			"ModifierName"	"modifier_disruption"
 			"Target" 		"TARGET"
 			"Duration"		"%AbilityDuration"
 		}
@@ -90,27 +99,19 @@
 		{
 			"ScriptFile"			"heroes/hero_shadow_demon/disruption.lua"
 			"Function"				"ApplyBuffOrDebuff"
-			"ModifierName_Buff"		"modifier_shadow_demon_disruption_datadriven_buff"
-			"ModifierName_Debuff"	"modifier_shadow_demon_disruption_datadriven_debuff"
+			"ModifierName_Buff"		"modifier_disruption_buff"
+			"ModifierName_Debuff"	"modifier_disruption_debuff"
 		}
 	}
 
 	"Modifiers"
 	{
-		"modifier_shadow_demon_disruption_datadriven"
+		"modifier_disruption"
 		{
 			"Duration"			"%AbilityDuration"
 			"Passive"			"0"
 			"IsHidden"			"1"
 			"IsDebuff"			"0"
-	
-			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf"
-			"EffectAttachType"	"attach_origin"
-
-			"ControlPointEntities"
-			{
-				"TARGET"	"attach_origin"
-			}
 	
 			"States"
 			{
@@ -135,7 +136,7 @@
 
 				"ApplyModifier"
 				{
-					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+					"ModifierName"	"modifie_disruption_invulnerable"
 					"Target" 		"TARGET"
 					"Duration"		"%AbilityDuration"
 				}
@@ -158,13 +159,13 @@
 
 				"RemoveModifier"
 				{
-					"ModifierName"	"modifier_shadow_demon_disruption_datadriven_invulnerable"
+					"ModifierName"	"modifier_disruption_invulnerable"
 					"Target" 		"TARGET"
 				}
 			}	
 		}
 
-		"modifier_shadow_demon_disruption_datadriven_invulnerable"
+		"modifier_disruption_invulnerable"
 		{
 			"Passive"			"0"
 			"IsHidden"			"1"
@@ -176,22 +177,24 @@
 			}
 		}
 
-		"modifier_shadow_demon_disruption_datadriven_buff"
+		"modifier_disruption_buff"
 		{
 			"Duration"			"%AbilityDuration"
 
 			"Passive"			"0"
 			"IsHidden"			"0"
 			"IsDebuff"			"0"
+			"IsBuff"			"1"
 		}
 
-		"modifier_shadow_demon_disruption_datadriven_debuff"
+		"modifier_disruption_debuff"
 		{
 			"Duration"			"%AbilityDuration"
 
 			"Passive"			"0"
 			"IsHidden"			"0"
 			"IsDebuff"			"1"
+			"IsBuff"			"0"
 		}
 	}
 

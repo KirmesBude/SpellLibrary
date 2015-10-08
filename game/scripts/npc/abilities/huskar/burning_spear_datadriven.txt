@@ -1,7 +1,13 @@
 // Rewrite of the Huskar Burning Spear ability
 // Author: Bude
 // Date: 30.09.2015
-"huskar_burning_spear_datadriven"
+// Version: 6.84
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_huskar/burning_spear.lua
+"burning_spear_datadriven"
 {
 	// General
 	//-------------------------------------------------------------------------------------------------------------
@@ -57,7 +63,7 @@
 	"Modifiers"
 	{
 		// Modifier to handle OrbEffect-Behaviour
-		"modifier_burning_spear_datadriven"
+		"modifier_burning_spear"
 		{
 			// Will always stay on the caster once the ability is upgraded
 			// Hidden
@@ -92,7 +98,7 @@
 			}
 
 			// Apply the hidden dot modifier to the target here
-			// Call IncreaseStackCount to keep stack count on modifier_burning_spear_datadriven_debuff_counter updated
+			// Call IncreaseStackCount to keep stack count on modifier_burning_spear_debuff_counter updated
 			"OnOrbImpact"
 			{
 				"FireSound"
@@ -103,7 +109,7 @@
 
 				"ApplyModifier"
 				{
-					"ModifierName"	"modifier_burning_spear_datadriven_debuff"
+					"ModifierName"	"modifier_burning_spear_debuff"
 					"Target" 		"TARGET"
 				}
 
@@ -112,14 +118,14 @@
 					"ScriptFile"	"heroes/hero_huskar/burning_spear.lua"
 					"Function"		"IncreaseStackCount"
 
-					"modifier_counter_name"		"modifier_burning_spear_datadriven_debuff_counter"
+					"modifier_counter_name"		"modifier_burning_spear_debuff_counter"
 				}
 			}
 		}
 
 		// Modifier to show stack count
 		// Only visual
-		"modifier_burning_spear_datadriven_debuff_counter"
+		"modifier_burning_spear_debuff_counter"
 		{
 			"Passive"			"0"
 			"IsHidden"			"0"
@@ -129,7 +135,7 @@
 		}
 
 		// Modifier to handle the dot
-		"modifier_burning_spear_datadriven_debuff"
+		"modifier_burning_spear_debuff"
 		{
 			"Passive"			"0"
 			"IsHidden"			"1"
@@ -165,7 +171,7 @@
 					"ScriptFile"	"heroes/hero_huskar/burning_spear.lua"
 					"Function"		"DecreaseStackCount"
 
-					"modifier_counter_name"		"modifier_burning_spear_datadriven_debuff_counter"
+					"modifier_counter_name"		"modifier_burning_spear_debuff_counter"
 				}
 			}
 		}

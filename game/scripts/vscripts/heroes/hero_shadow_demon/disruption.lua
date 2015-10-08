@@ -1,6 +1,28 @@
---[[Astral Imprisonment stop loop sound and show the model again
-	Author: chrislotix
-	Date: 6.1.2015.]]
+--[[Author: Bude
+	Date: 8.10.2015
+	Hides the model for the duration of Disruption and keeps track of the target in a table]]
+function DisruptionStart( keys )
+	local target = keys.target
+	local target_origin = GetGroundPosition(target:GetAbsOrigin(), target)
+	local vAdjust = Vector(0,0,150)
+
+	target:AddNoDraw()
+
+	local caster = keys.caster
+	if caster.Disruption_Targets == nil then
+		caster.Disruption_Targets = {}
+	end
+
+	table.insert(caster.Disruption_Targets, target)
+
+	-- Particles
+	target.Disruption_nFXindex = ParticleManager:CreateParticle("particles/units/heroes/hero_shadow_demon/shadow_demon_disruption.vpcf", PATTACH_ABSORIGIN, target)
+	ParticleManager:SetParticleControl(target.Disruption_nFXindex, 0, target_origin+vAdjust)
+end
+
+--[[Author: Bude
+	Date: 8.10.2015
+	Shows the model again after the duration of Disruption and removes the target from the table]]
 function DisruptionEnd( keys )
 
 	local sound_name = keys.sound_name
@@ -16,30 +38,17 @@ function DisruptionEnd( keys )
 	target:RemoveNoDraw()
 
 	local caster = keys.caster
-	local disruptedUnits = caster.disruptedUnits
+	local Disruption_Targets = caster.Disruption_Targets
 
-	for i=1, #disruptedUnits, 1 do
-		if disruptedUnits[i] == target then
-			table.remove(disruptedUnits, i)
+	for i=1, #Disruption_Targets, 1 do
+		if Disruption_Targets[i] == target then
+			table.remove(Disruption_Targets, i)
 			break
 		end
 	end
-end
 
---[[Author: Pizzalol
-	Date: 27.04.2015.
-	Hides the model for the duration of Astral Imprisonment]]
-function DisruptionStart( keys )
-	local target = keys.target
-
-	target:AddNoDraw()
-
-	local caster = keys.caster
-	if not caster.disruptedUnits then
-		caster.disruptedUnits = {}
-	end
-
-	table.insert(caster.disruptedUnits, target)
+	ParticleManager:DestroyParticle(target.Disruption_nFXindex, true)
+	ParticleManager:ReleaseParticleIndex(target.Disruption_nFXindex)
 end
 
 function ApplyBuffOrDebuff( keys )
@@ -134,22 +143,5 @@ function CreateIllusions( event )
 		illusion:MakeIllusion()
 		-- Set the illusion hp to be the same as the target
 		illusion:ModifyHealth(target:GetHealth(), ability, false, 0)
-
-		-- redundant
-		--AutoAttack(illusion, target)
 	end
-end
-
-function AutoAttack(attacker, target)
-	if attacker:GetTeamNumber() ~= target:GetTeamNumber() then
-		local order = 
-        {
-            UnitIndex = attacker:GetEntityIndex(),
-            OrderType = DOTA_UNIT_ORDER_ATTACK_TARGET,
-            TargetIndex = target:GetEntityIndex(),
-            Queue = true
-        }
-
-        ExecuteOrderFromTable(order)
-    end
 end
