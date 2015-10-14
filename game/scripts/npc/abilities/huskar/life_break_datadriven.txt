@@ -1,7 +1,7 @@
 // Rewrite of the Huskar Life Break ability
 // Author: Bude
 // Date: 30.09.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven / Lua(Modifier)
 //
 // ----- FILE REQUIREMENTS -----
@@ -179,6 +179,7 @@
 			"Passive"			"0"
 			"IsHidden"			"0"
 			"IsDebuff"			"1"
+			"IsPurgable"		"1"
 			"Duration"			"%AbilityDuration"
 
 			"StatusEffectName"		"particles/status_fx/status_effect_huskar_lifebreak.vpcf"

@@ -4,11 +4,15 @@ end
 
 --[[
     Author: Bude
-    Date: 30.09.2015.
+    Date: 14.10.2015.
     Checks target health every interval and adjusts health regen accordingly
 ]]--
 
 function modifier_inner_vitality:IsBuff()
+    return 1
+end
+
+function modifier_inner_vitality:IsPurgable()
     return 1
 end
 

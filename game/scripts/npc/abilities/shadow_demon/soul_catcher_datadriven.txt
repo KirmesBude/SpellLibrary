@@ -1,7 +1,7 @@
 // Rewrite of Shadow Demon Soul Catcher
 // Author: Bude
 // Date: 08.10.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven
 //
 // ----- FILE REQUIREMENTS -----
@@ -89,6 +89,7 @@
 			"Passive"			"0"
 			"IsHidden"			"0"
 			"IsDebuff"			"1"
+			"IsPurgable"		"0"
 	
 			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_soul_catcher_debuff.vpcf"
 			"EffectAttachType"	"follow_origin"

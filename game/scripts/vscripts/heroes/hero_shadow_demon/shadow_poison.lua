@@ -1,14 +1,3 @@
-function OnUpgrade( keys )
-	local caster = keys.caster
-	local ability_release_name = keys.ReleaseName
-
-	local ability_release = caster:FindAbilityByName(ability_release_name)
-
-	if ability_release ~= nil then
-		ability_release:SetLevel(1)
-	end
-end
-
 function OnProjectileHit( keys )
 	local caster = keys.caster
 	local target = keys.target
@@ -135,7 +124,15 @@ function DoDamage( caster, target, ability, modifier_name )
 	local stackCount = target.Shadow_Poison_StackCount
 	local level = target.Shadow_Poison_AbilityLevel
 	local dmg_per_stack = ability:GetLevelSpecialValueFor("stack_damage", level-1)
-	local dmg = stackCount*dmg_per_stack
+	local dmg_per_stack_overlimit = ability:GetAbilityDamage()
+	local dmg = 0
+
+	if stackCount >= 5 then
+		dmg = stackCount-5*dmg_per_stack_overlimit
+		stackCount = 5
+	end
+
+	dmg = dmg + math.pow(2,stackCount-1)*dmg_per_stack
 	
 	local dmg_table = {
 						victim = target,

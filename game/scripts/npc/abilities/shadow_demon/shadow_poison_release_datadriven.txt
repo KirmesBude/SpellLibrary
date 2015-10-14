@@ -1,7 +1,7 @@
 // Rewrite of Shadow Demon Shadow Poison Release
 // Author: Bude
 // Date: 08.10.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven
 //
 // ----- FILE REQUIREMENTS -----

@@ -1,7 +1,7 @@
 // Rewrite of the Huskar Burning Spear ability
 // Author: Bude
 // Date: 30.09.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven
 //
 // ----- FILE REQUIREMENTS -----
@@ -131,7 +131,7 @@
 			"IsHidden"			"0"
 			"IsBuff"			"0"
 			"IsDebuff"			"1"
-			"IsPurgable"		"0"
+			"IsPurgable"		"1"
 		}
 
 		// Modifier to handle the dot
@@ -141,7 +141,7 @@
 			"IsHidden"			"1"
 			"IsBuff"			"0"
 			"IsDebuff"			"1"
-			"IsPurgable"		"0"
+			"IsPurgable"		"1"
 			"Duration"			"%AbilityDuration"
 
 			// Allow multiple instances of this modifier on the target

@@ -1,7 +1,7 @@
 // Rewrite of Shadow Demon Disruption
 // Author: Bude
 // Date: 08.10.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven
 //
 // ----- FILE REQUIREMENTS -----
@@ -112,6 +112,7 @@
 			"Passive"			"0"
 			"IsHidden"			"1"
 			"IsDebuff"			"0"
+			"IsPurgable"		"0"
 	
 			"States"
 			{
@@ -170,6 +171,7 @@
 			"Passive"			"0"
 			"IsHidden"			"1"
 			"IsDebuff"			"0"
+			"IsPurgable"		"0"
 		
 			"States"
 			{
@@ -185,6 +187,7 @@
 			"IsHidden"			"0"
 			"IsDebuff"			"0"
 			"IsBuff"			"1"
+			"IsPurgable"		"0"
 		}
 
 		"modifier_disruption_debuff"
@@ -195,6 +198,7 @@
 			"IsHidden"			"0"
 			"IsDebuff"			"1"
 			"IsBuff"			"0"
+			"IsPurgable"		"0"
 		}
 	}
 

@@ -1,7 +1,7 @@
 // Rewrite of Shadow Demon Shadow Poison
 // Author: Bude
 // Date: 08.10.2015
-// Version: 6.84
+// Version: 6.85
 // Type: Datadriven
 //
 // ----- FILE REQUIREMENTS -----
@@ -20,7 +20,7 @@
 	// Time		
 	//-------------------------------------------------------------------------------------------------------------
 	"AbilityDuration"				"10.0 10.0 10.0 10.0"
-	"AbilityCooldown"				"2.75"
+	"AbilityCooldown"				"2.5"
 
 	// Casting
 	//-------------------------------------------------------------------------------------------------------------
@@ -102,11 +102,10 @@
 	//-------------------------------------------------------------------------------------------------------------
 	"OnUpgrade"
 	{
-		"RunScript"
+		"LevelUpAbility"
 		{
-			"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
-			"Function"		"OnUpgrade"
-			"ReleaseName"	"shadow_poison_release_datadriven"
+			"Target" 		"CASTER"
+			"AbilityName"	"shadow_poison_release_datadriven"
 		}
 	}
 
@@ -183,6 +182,7 @@
 			"Passive"			"0"
 			"IsHidden"			"0"
 			"IsDebuff"			"1"
+			"IsPurgable"		"1"
 	
 			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
 			"EffectAttachType"	"follow_origin"
