@@ -17,8 +17,9 @@ function OnProjectileHit( keys )
 
 	local targets = caster.Shadow_Poison_Targets
 
-	if IsValidTarget(targets, disruptedTargets, target) then
+	if IsValidTarget(keys) then
 		
+		DoOnHitDamage(keys)
 		if not TableContains(targets, target) then
 			table.insert(targets, target)
 		end
@@ -55,28 +56,20 @@ function OnProjectileHit( keys )
 	end
 end
 
-function IsValidTarget(targets, disruptedTargets, target)
-	if target:IsInvulnerable() or target:IsOutOfGame() then
-		if TableContains(disruptedTargets, target) then
-			return true
-		end
-	else
-		return true
-	end
+function DoOnHitDamage(keys)
+	local caster = keys.caster
+	local target = keys.target
+	local ability = keys.ability
+	local dmg = ability:GetAbilityDamage()
+	local dmg_type = ability:GetAbilityDamageType()
 
-	return false
-end
-
-function TableContains(table, handle)
-	if table ~= nil then
-		for _,thandle in pairs(table) do
-			if thandle == handle then
-				return true
-			end
-		end
-	end
-
-	return false
+	local dmg_table = {
+					victim = target,
+					attacker = caster,
+					damage = dmg,
+					damage_type = dmg_type
+					}
+	ApplyDamage(dmg_table)
 end
 
 function OnModifierDestroyed( keys )
@@ -100,7 +93,14 @@ function OnModifierDestroyed( keys )
 		end
 	end
 
-	DoDamage(caster, target, ability, modifier_name)
+	local nFXindex = ParticleManager:CreateParticle("particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_release.vpcf", PATTACH_ABSORIGIN_FOLLOW, target)
+	ParticleManager:SetParticleControlEnt(nFXindex, 0, target, PATTACH_ABSORIGIN_FOLLOW, "follow_origin", target:GetAbsOrigin(), true)
+	ParticleManager:SetParticleControlEnt(nFXindex, 2, target, PATTACH_ABSORIGIN_FOLLOW, "follow_origin", target:GetAbsOrigin(), true)
+	ParticleManager:SetParticleControl(nFXindex, 3, Vector(target.stackCount,0,0))
+
+	ParticleManager:ReleaseParticleIndex(nFXindex)
+
+	DoReleaseDamage(keys)
 
 	target.Shadow_Poison_StackCount = 0
 end
@@ -119,26 +119,83 @@ function Release( keys )
 	end
 end
 
-function DoDamage( caster, target, ability, modifier_name )
-	print("doing damage")
+function DoReleaseDamage( keys )
+	local caster = keys.caster
+	local target = keys.target
+	local ability_name = keys.AbilityNameDisruption
+	local ability = caster:FindAbilityByName(ability_name)
+	local modifier_name = keys.ModifierNameDisruptionInvulnerable
+	local modifier = target:FindModifierByName(modifier_name)
+
+	if target:HasModifier(modifier_name) and IsDisruptedFromCaster(caster, target) then
+		print("disrupted target yoo")
+
+		local remaining = modifier:GetRemainingTime()
+
+		target:RemoveModifierByName(modifier_name)
+
+		_DoReleaseDamage(keys)
+
+		ability:ApplyDataDrivenModifier(caster, target, modifier_name, {Duration = remaining})
+	else
+		_DoReleaseDamage(keys)
+	end
+end
+
+function _DoReleaseDamage( keys )
+	local caster = keys.caster
+	local target = keys.target
+	local ability = keys.ability
+	local dmg_type = ability:GetAbilityDamageType()
 	local stackCount = target.Shadow_Poison_StackCount
 	local level = target.Shadow_Poison_AbilityLevel
-	local dmg_per_stack = ability:GetLevelSpecialValueFor("stack_damage", level-1)
-	local dmg_per_stack_overlimit = ability:GetAbilityDamage()
+	local max_multiply_stacks = ability:GetLevelSpecialValueFor("max_multiply_stacks", level-1)
+	local stack_damage = ability:GetLevelSpecialValueFor("stack_damage", level-1)
+	local bonus_stack_damage = ability:GetLevelSpecialValueFor("bonus_stack_damage", level-1)
 	local dmg = 0
 
-	if stackCount >= 5 then
-		dmg = stackCount-5*dmg_per_stack_overlimit
-		stackCount = 5
+	if stackCount >= max_multiply_stacks then
+		dmg = (stackCount-max_multiply_stacks)*bonus_stack_damage
+		stackCount = max_multiply_stacks
 	end
 
-	dmg = dmg + math.pow(2,stackCount-1)*dmg_per_stack
+	dmg = dmg + math.pow(2,stackCount-1)*stack_damage
 	
 	local dmg_table = {
 						victim = target,
 						attacker = caster,
 						damage = dmg,
-						damage_type = DAMAGE_TYPE_MAGICAL
+						damage_type = dmg_type
 						}
 	ApplyDamage(dmg_table)
+end
+
+function IsValidTarget(keys)
+	local caster = keys.caster
+	local target = keys.target
+
+	if (target:IsInvulnerable() and not IsDisruptedFromCaster(caster,target)) then
+
+		return false
+	end
+
+	return true
+end
+
+function IsDisruptedFromCaster( caster, target )
+	local disruptedTargets = caster.Disruption_Targets
+
+	return TableContains(disruptedTargets, target)
+end
+
+function TableContains(table, handle)
+	if table ~= nil then
+		for _,thandle in pairs(table) do
+			if thandle == handle then
+				return true
+			end
+		end
+	end
+
+	return false
 end

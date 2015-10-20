@@ -7,6 +7,9 @@
 // ----- FILE REQUIREMENTS -----
 // Script files:
 // scripts/vscripts/heroes/hero_shadow_demon/shadow_poison.lua
+//
+// ----- NOTES ----- 
+// Particle Effect for the stacks stops at 9 - no idea
 "shadow_poison_datadriven"
 {
 	// General
@@ -29,7 +32,7 @@
 
 	// Cost
 	//-------------------------------------------------------------------------------------------------------------
-	"AbilityManaCost"				"50 50 50 50"
+	"AbilityManaCost"				"40 40 40 40"
 
 	// Damage.
 	//-------------------------------------------------------------------------------------------------------------
@@ -166,13 +169,6 @@
 			"ModifierNameDisruptionInvulnerable"	"modifier_disruption_invulnerable"
 			"AbilityNameDisruption"	"disruption_datadriven"
 		}
-
-		"Damage"
-		{
-			"Target"		"TARGET"
-			"Type"			"DAMAGE_TYPE_MAGICAL"
-			"Damage"		"%AbilityDamage"
-		}
 	}
 
 	"Modifiers"
@@ -187,8 +183,6 @@
 			"EffectName"		"particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_4stack.vpcf"
 			"EffectAttachType"	"follow_origin"
 
-			"Attributes"		"MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE"
-
 			"OnDestroy"
 			{
 				"FireSound"
@@ -197,18 +191,13 @@
 					"Target" 		"TARGET"
 				}
 
-				"FireEffect"
-				{
-					"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_shadow_poison_release.vpcf"
-					"EffectAttachType"  "follow_origin"
-					"Target"            "TARGET"
-				}
-
 				"RunScript"
 				{
 					"ScriptFile"	"heroes/hero_shadow_demon/shadow_poison.lua"
 					"Function"		"OnModifierDestroyed"
 					"ModifierName"	"modifier_shadow_poison_debuff"
+					"ModifierNameDisruptionInvulnerable"	"modifier_disruption_invulnerable"
+					"AbilityNameDisruption"	"disruption_datadriven"
 				}
 			}
 		}

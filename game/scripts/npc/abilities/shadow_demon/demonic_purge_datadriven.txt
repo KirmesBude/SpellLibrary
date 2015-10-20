@@ -7,7 +7,6 @@
 // ----- FILE REQUIREMENTS -----
 // Script files:
 // scripts/vscripts/heroes/hero_shadow_demon/demonic_purge.lua
-// TODO: split into root slow and debuff
 "demonic_purge_datadriven"
 {
 	// General
@@ -47,38 +46,38 @@
 	{
 		"01"
 		{
-			"var_type"			"FIELD_INTEGER"
-			"slow_rate"			"5 3 2"
+			"var_type"								"FIELD_INTEGER"
+			"slow_rate"								"5 3 2"
 		}
 		"02"
 		{
-			"var_type"			"FIELD_FLOAT"
-			"tooltip_duration"	"5.0 5.0 5.0"
+			"var_type"								"FIELD_FLOAT"
+			"tooltip_duration"						"5.0 5.0 5.0"
 		}
 		"03"
 		{
-			"var_type"				"FIELD_FLOAT"
-			"creep_root_duration"	"3.0 3.0 3.0"
+			"var_type"								"FIELD_FLOAT"
+			"creep_root_duration"					"3.0 3.0 3.0"
 		}
 		"04"
 		{
-			"var_type"			"FIELD_INTEGER"
-			"max_charges"		"3"
+			"var_type"								"FIELD_INTEGER"
+			"max_charges"							"3"
 		}
 		"05"
 		{
-			"var_type"			"FIELD_INTEGER"
-			"charge_restore_time"		"40"
+			"var_type"								"FIELD_INTEGER"
+			"charge_restore_time"					"40"
 		}
 		"06"
 		{
-			"var_type"			"FIELD_INTEGER"
-			"charge_restore_time_tooltip_scepter"		"40"
+			"var_type"								"FIELD_INTEGER"
+			"charge_restore_time_tooltip_scepter"	"40"
 		}
 		"07"
 		{
-			"var_type"			"FIELD_FLOAT"
-			"movement_slow"		"-100 -100 -100"
+			"var_type"								"FIELD_FLOAT"
+			"movement_slow"							"-100 -100 -100"
 		}
 	}
 
@@ -102,25 +101,54 @@
 			"Target" 		"TARGET"
 		}
 
-		// TODO: Target = CASTER and attached to its attack
 		"FireEffect"
 		{
 			"EffectName"        "particles/units/heroes/hero_shadow_demon/shadow_demon_demonic_purge_cast.vpcf"
-			"EffectAttachType"  "follow_origin"
-			"Target"            "TARGET"
+			"EffectAttachType"  "attach_attack1"
+			"Target"            "CASTER"
+		}
+
+		"ApplyModifier"
+		{
+			"ModifierName"	"modifier_demonic_purge_debuff"
+			"Target" 		"TARGET"
+			"Duration"		"%AbilityDuration"
 		}
 
 		"RunScript"
 		{
-			"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
-			"Function"		"DemonicPurgeStart"
-			"ModifierName"	"modifier_demonic_purge"
+			"ScriptFile"		"heroes/hero_shadow_demon/demonic_purge.lua"
+			"Function"			"DemonicPurgeStart"
+			"ModifierName_Slow"	"modifier_demonic_purge_slow"
+			"ModifierName_Root"	"modifier_demonic_purge_root"
 		}
 	}
 
 	"Modifiers"
 	{
-		"modifier_demonic_purge"
+		"modifier_demonic_purge_slow"
+		{
+			"IsHidden"	"1"
+			"IsDebuff"	"1"
+
+			"Properties"
+			{
+				"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"	"-1"
+			}
+		}
+
+		"modifier_demonic_purge_root"
+		{
+			"IsHidden"	"1"
+			"IsDebuff"	"1"
+
+			"States"
+			{
+				"MODIFIER_STATE_ROOTED"	"MODIFIER_STATE_VALUE_ENABLED"
+			}
+		}
+
+		"modifier_demonic_purge_debuff"
 		{
 			"Passive"			"0"
 			"IsHidden"			"0"
@@ -135,11 +163,6 @@
 			"EffectAttachType"	"follow_origin"
 			
 			"Attributes"		"MODIFIER_ATTRIBUTE_MULTIPLE"
-
-			"Properties"
-			{
-			    "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE" "-1" 
-			}
 
 			"OnCreated"
 			{
@@ -161,9 +184,10 @@
 				//Purge and damage
 				"RunScript"
 				{
-					"ScriptFile"	"heroes/hero_shadow_demon/demonic_purge.lua"
-					"Function"		"DemonicPurgeModifierDestroyed"
-					"ModifierName"	"modifier_disruption_invulnerable"
+					"ScriptFile"							"heroes/hero_shadow_demon/demonic_purge.lua"
+					"Function"								"DemonicPurgeModifierDestroyed"
+					"ModifierNameDisruptionInvulnerable"	"modifier_disruption_invulnerable"
+					"AbilityNameDisruption"					"disruption_datadriven"
 				}
 			}
 		}

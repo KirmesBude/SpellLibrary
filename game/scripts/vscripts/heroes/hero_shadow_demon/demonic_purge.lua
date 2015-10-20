@@ -1,3 +1,6 @@
+--[[Author: Bude
+	Date: 8.10.2015
+	Slows or roots the target based on IsCreep()]]
 function DemonicPurgeStart( keys )
 	local target = keys.target
 
@@ -13,18 +16,24 @@ function Root( keys )
 	local target = keys.target
 	local ability = keys.ability
 	local duration = ability:GetLevelSpecialValueFor("creep_root_duration", ability:GetLevel()-1)
+	local modifier_name = keys.ModifierName_Root
 
-	target:AddNewModifier(caster, ability, "modifier_rooted", {Duration = duration})
+	ability:ApplyDataDrivenModifier(caster, target, modifier_name, {Duration = duration})
 end
 
+--[[Author: Bude
+	Date: 8.10.2015
+	Applies the Demonic Purge Slow modifier with a decaying slow
+	Code based on Pizzalol's venomancer venomous_gale]]
 function Slow( keys )
+	-- Variables
 	local caster = keys.caster
 	local ability = keys.ability
 	local ability_level = ability:GetLevel() - 1
 	local target = keys.target
 
 	-- Ability variables
-	local modifier_name = keys.ModifierName
+	local modifier_name = keys.ModifierName_Slow
 	local duration = ability:GetDuration()
 	local movement_slow = ability:GetLevelSpecialValueFor("movement_slow", ability_level) * -1 -- Turn it into a positive value
 	local slow_intervals = ability:GetLevelSpecialValueFor("slow_rate", ability_level)
@@ -38,7 +47,7 @@ function Slow( keys )
 		Timers:RemoveTimer(target.Demonic_Purge_Timer)
 	end
 
-	-- Apply the Venomous Gale modifier and set the slow amount
+	-- Apply the Demonic Purge Slow modifier and set the slow amount
 	ability:ApplyDataDrivenModifier(caster, target, modifier_name, {duration = duration})
 	target:SetModifierStackCount(modifier_name, caster, movement_slow)
 
@@ -56,12 +65,16 @@ function Slow( keys )
 	end)
 end
 
+--[[Author: Bude
+	Date: 8.10.2015
+	Called when the modifier is destroyed. Purges and damages target]]
 function DemonicPurgeModifierDestroyed( keys )
 	BasicPurge(keys)
 	DoDamage(keys)
 end
 
 function BasicPurge( keys )
+	-- Variables
 	local target = keys.target
 	local bRemovePositiveBuffs = true
 	local bRemoveDebuffs = false
@@ -72,28 +85,34 @@ function BasicPurge( keys )
 	target:Purge(bRemovePositiveBuffs, bRemoveDebuffs, bFrameOnly, bRemoveStuns, bRemoveExceptions)
 end
 
+--[[Author: Bude
+	Date: 8.10.2015
+	Does Damage based on AbilitySpecial]]
 function DoDamage( keys )
 	local caster = keys.caster
 	local target = keys.target
-	local ability = keys.ability
-	local modifier_name = keys.ModifierName
+	local ability_name = keys.AbilityNameDisruption
+	local ability = caster:FindAbilityByName(ability_name)
+	local modifier_name = keys.ModifierNameDisruptionInvulnerable
+	local modifier = target:FindModifierByName(modifier_name)
 
 	if target:HasModifier(modifier_name) and IsDisruptedFromCaster(caster, target) then
-		print("disrupted target yoo")
-		local modifier = target:FindModifierByName(modifier_name)
-		local duration = modifier:GetRemainingTime()
+		-- disrupted target found
+
+		local remaining = modifier:GetRemainingTime()
 
 		target:RemoveModifierByName(modifier_name)
 
 		_DoDamage(keys)
 
-		ability:ApplyDataDrivenModifier(caster, target, modifier_name, {Duration = duration})
+		ability:ApplyDataDrivenModifier(caster, target, modifier_name, {Duration = remaining})
 	else
 		_DoDamage(keys)
 	end
 end
 
 function _DoDamage( keys )
+	-- Variables
 	local caster = keys.caster
 	local target = keys.target
 	local ability = keys.ability
@@ -110,7 +129,9 @@ function _DoDamage( keys )
 	ApplyDamage(dmg_table)
 end
 
-
+--[[Author: Bude
+	Date: 8.10.2015
+	Returns true if the given target is currently disrupted by the caster]]
 function IsDisruptedFromCaster( caster, target )
 	local disruptedTargets = caster.Disruption_Targets
 

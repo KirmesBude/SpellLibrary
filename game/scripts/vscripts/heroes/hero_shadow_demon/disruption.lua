@@ -2,17 +2,21 @@
 	Date: 8.10.2015
 	Hides the model for the duration of Disruption and keeps track of the target in a table]]
 function DisruptionStart( keys )
+	-- Variables
 	local target = keys.target
 	local target_origin = GetGroundPosition(target:GetAbsOrigin(), target)
+	local caster = keys.caster
 	local vAdjust = Vector(0,0,150)
 
+	-- Hide the target
 	target:AddNoDraw()
 
-	local caster = keys.caster
+	-- Initialize Disruption targets table on the caster
 	if caster.Disruption_Targets == nil then
 		caster.Disruption_Targets = {}
 	end
 
+	-- Adding the Disruption target to a list for interactions with other spells
 	table.insert(caster.Disruption_Targets, target)
 
 	-- Particles
@@ -24,22 +28,25 @@ end
 	Date: 8.10.2015
 	Shows the model again after the duration of Disruption and removes the target from the table]]
 function DisruptionEnd( keys )
-
+	-- Variables
 	local sound_name = keys.sound_name
 	local target = keys.target
-
-	--Stops the loop sound when the modifier ends
-	StopSoundEvent(sound_name, target)
-
-	if target ~= nil and target:GetHealth() > 0 then
-		CreateIllusions( keys )
-	end
-
-	target:RemoveNoDraw()
-
 	local caster = keys.caster
 	local Disruption_Targets = caster.Disruption_Targets
 
+	-- Remove the invulnerable modifier, just to be safe
+	target:RemoveModifierByName("modifier_disruption_invulnerable")
+
+	-- Stops the loop sound when the modifier ends
+	StopSoundEvent(sound_name, target)
+
+	-- Create Illusions if possible and show the target again
+	if target ~= nil and target:GetHealth() > 0 then
+		CreateIllusions( keys )
+	end
+	target:RemoveNoDraw()
+
+	-- Remove the target from the Disruption targets table
 	for i=1, #Disruption_Targets, 1 do
 		if Disruption_Targets[i] == target then
 			table.remove(Disruption_Targets, i)
@@ -47,34 +54,43 @@ function DisruptionEnd( keys )
 		end
 	end
 
+	-- Destroy Particles
 	ParticleManager:DestroyParticle(target.Disruption_nFXindex, true)
 	ParticleManager:ReleaseParticleIndex(target.Disruption_nFXindex)
 end
 
+--[[Author: Bude
+	Date: 8.10.2015
+	Simply applies the right visual modifier based on teams of caster and target]]
 function ApplyBuffOrDebuff( keys )
+	-- Variables
 	local caster = keys.caster
 	local target = keys.target
 	local ability = keys.ability
-	local modifiername_buff = keys.ModifierName_Buff
-	local modifiername_debuff = keys.ModifierName_Debuff
+	local modifier_name_buff = keys.modifier_name_buff
+	local modifier_name_debuff = keys.modifier_name_debuff
 
-	print(caster:GetTeamNumber() == target:GetTeamNumber())
-	if caster:GetTeamNumber() == target:GetTeamNumber() then
-		print(modifiername_buff)
-		ability:ApplyDataDrivenModifier(caster, target, modifiername_buff, {})
+	if caster:GetTeam() == target:GetTeam() then
+		print("buff")
+		ability:ApplyDataDrivenModifier(caster, target, modifier_name_buff, {})
 	else
-		print(modifiername_debuff)
-		ability:ApplyDataDrivenModifier(caster, target, modifiername_debuff, {})
+		print("debuff")
+		ability:ApplyDataDrivenModifier(caster, target, modifier_name_debuff, {})
 	end
 end
 
+--[[Author: Bude, Noya
+	Date: 8.10.2015
+	Creates Illusions based on AbilitySpecials in accordance to how disruption behaves
+	Code based on Noya's implementation of naga_siren mirror_image]]
 function CreateIllusions( event )
+	-- Variables
 	local caster = event.caster
 	local target = event.target
 	local player = caster:GetPlayerID()
 	local ability = event.ability
 	local unit_name = target:GetUnitName()
-	local images_count = 2
+	local images_count = ability:GetLevelSpecialValueFor( "illusion_count" , ability:GetLevel() - 1 )
 	local duration = ability:GetLevelSpecialValueFor( "illusion_duration", ability:GetLevel() - 1 )
 	local outgoingDamage = ability:GetLevelSpecialValueFor( "illusion_outgoing_damage", ability:GetLevel() - 1 )
 	local incomingDamage = ability:GetLevelSpecialValueFor( "illusion_incoming_damage", ability:GetLevel() - 1 )
@@ -86,13 +102,20 @@ function CreateIllusions( event )
 	target:Stop()
 
 	-- Setup a table of potential spawn positions
-	-- TODO: Randomize towards SouthWest or NorthEast
-	local vSpawnPos = {
-		Vector( 72, -72, 0 ),		-- NorthWest
-		Vector( -72, 72, 0 ),		-- SouthEast
-	}
+	-- Note: It's stupid but this more or less results in right behaviour for standard disruption
+	local vSpawnPos = {}
 
-	-- At first, move the main hero to one of the random spawn positions.
+	local vector1 = Vector( 72, -72, 0 )
+	local vector2 = Vector( 72, 72, 0)
+
+	for i=1, math.ceil(images_count/4) do
+		table.insert(vSpawnPos, i*vector1)
+		table.insert(vSpawnPos, -i*vector1)
+		table.insert(vSpawnPos, i*vector2)
+		table.insert(vSpawnPos, -i*vector2)
+	end
+
+	-- Reposition target
 	FindClearSpaceForUnit( target, targetOrigin , true )
 
 	-- Spawn illusions
